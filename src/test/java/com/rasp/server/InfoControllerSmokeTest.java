@@ -29,6 +29,8 @@ public class InfoControllerSmokeTest {
                 .andExpect(status().is2xxSuccessful());
         mvc.perform(get("/test/populate/TEMPERATURE"))
                 .andExpect(status().is2xxSuccessful());
+        mvc.perform(get("/test/populate/settings"))
+                .andExpect(status().is2xxSuccessful());
 
     }
 
