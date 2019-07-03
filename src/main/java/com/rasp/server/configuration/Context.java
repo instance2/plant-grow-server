@@ -20,19 +20,19 @@ public class Context {
 
     @Bean
     OptimalConditionService optimalConditionService(
-            @Value("${service.settings.profile}") String settingName,
             EventLogService eventLogService,
             ConditionSettingsService settingsService
     ) {
-        return new OptimalConditionService(settingName, eventLogService, settingsService);
+        return new OptimalConditionService(eventLogService, settingsService);
     }
 
     @Bean
     SchedulerCommandService schedulerCommandService(
             OptimalConditionService optimalConditionService,
+            ConditionSettingsService settingsService,
             ServoCommandExecutor servoCommandExecutor,
             @Value("${service.commands.cron}") String cron) {
-        return new SchedulerCommandService(optimalConditionService, servoCommandExecutor, cron);
+        return new SchedulerCommandService(optimalConditionService, settingsService, servoCommandExecutor, cron);
     }
 
     @Bean
@@ -41,8 +41,8 @@ public class Context {
     }
 
     @Bean
-    ConditionSettingsService conditionSettingsService(ConditionSettingsRepository conditionSettingsRepository) {
-        return new ConditionSettingsService(conditionSettingsRepository);
+    ConditionSettingsService conditionSettingsService(ConditionSettingsRepository conditionSettingsRepository, @Value("${service.settings.profile}") String settingName) {
+        return new ConditionSettingsService(conditionSettingsRepository, settingName);
     }
 
     @Bean

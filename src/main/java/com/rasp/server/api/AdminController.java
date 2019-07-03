@@ -1,9 +1,10 @@
 package com.rasp.server.api;
 
 import com.rasp.server.repo.CommandLogRepository;
-import com.rasp.server.repo.EventLogRepository;
 import com.rasp.server.repo.ConditionSettingsRepository;
+import com.rasp.server.repo.EventLogRepository;
 import com.rasp.server.repo.tables.Settings;
+import com.rasp.server.service.SchedulerCommandService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,8 @@ public class AdminController {
     private final EventLogRepository eventLogRepository;
     private final CommandLogRepository commandLogRepository;
     private final ConditionSettingsRepository conditionSettingsRepository;
-
+    private final SchedulerCommandService schedulerCommandService;
+    
     @DeleteMapping("/admin/events/clean")
     public void cleanEvents() {
         eventLogRepository.deleteAll().block();
@@ -36,5 +38,10 @@ public class AdminController {
     @GetMapping("/admin/settings")
     public List<Settings> getAllSettings() {
         return conditionSettingsRepository.findAll();
+    }
+
+    @GetMapping("/admin/settings/cron")
+    public String getCurrentCronConf() {
+        return schedulerCommandService.getCronConfig();
     }
 }

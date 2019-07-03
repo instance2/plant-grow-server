@@ -2,35 +2,36 @@ package com.rasp.server.service;
 
 import com.rasp.server.constant.EventType;
 import com.rasp.server.constant.UnitType;
-import com.rasp.server.repo.EventLogRepository;
 import com.rasp.server.repo.ConditionSettingsRepository;
+import com.rasp.server.repo.EventLogRepository;
 import com.rasp.server.repo.tables.Params;
 import com.rasp.server.repo.tables.Records;
 import com.rasp.server.repo.tables.Settings;
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.rasp.server.constant.EventType.*;
 
 @AllArgsConstructor
+@Transactional
 public class TestUtilService {
     private final EventLogRepository eventLogRepository;
     private final ConditionSettingsRepository conditionSettingsRepository;
 
     public void setMockData(EventType eventType) {
         String unit = getUnitType(eventType);
-        IntStream.range(0, 20000)
-                .forEach(index ->
-                        CompletableFuture.runAsync(
-                                () -> eventLogRepository.save(
-                                        new Records(UUID.randomUUID(), Date.from(Instant.now()).getTime(), eventType.name(), new BigDecimal(Math.random()), unit)
-                                ).block()
-                        ));
+        List<Records> records = IntStream.range(0, 30)
+                .mapToObj(index ->
+                        new Records(UUID.randomUUID(), Date.from(Instant.now()).getTime(), eventType.name(), new BigDecimal(Math.random()), unit)
+
+                ).collect(Collectors.toList());
+        eventLogRepository.saveAll(records).blockLast();
     }
 
     public void setSettings() {

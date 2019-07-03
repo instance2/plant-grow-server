@@ -1,5 +1,7 @@
 package com.rasp.server;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +21,32 @@ public class InfoControllerSmokeTest {
     @Autowired
     private MockMvc mvc;
 
-    @Test
-    public void getHumidity() throws Exception {
+    @Before
+    public void populateData() throws Exception {
         mvc.perform(get("/test/populate/HUMIDITY"))
                 .andExpect(status().is2xxSuccessful());
+        mvc.perform(get("/test/populate/LIGHT"))
+                .andExpect(status().is2xxSuccessful());
+        mvc.perform(get("/test/populate/TEMPERATURE"))
+                .andExpect(status().is2xxSuccessful());
+
+    }
+
+    @Test
+    public void getHumidity() throws Exception {
         mvc.perform(get("/current/HUMIDITY"))
                 .andExpect(status().is2xxSuccessful());
     }
 
     @Test
     public void getLightIndex() throws Exception {
-        mvc.perform(get("/test/populate/LIGHT"))
-                .andExpect(status().is2xxSuccessful());
         mvc.perform(get("/current/LIGHT"))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    public void getTemperature() throws Exception {
+        mvc.perform(get("/current/TEMPERATURE"))
                 .andExpect(status().is2xxSuccessful());
     }
 }

@@ -14,7 +14,7 @@ public class ServoCommandExecutor {
     private final CommandLogRepository commandLogRepository;
 
     public void executeCommand(CommandType commandType) {
-        //TODO API ON HARDWARE TBD
+        //TODO API ON HARDWARE TBD, DO ASYNC
         System.out.println("GOING EXEC COMMAND " + commandType);
         commandLogRepository.save(new Commands(UUID.randomUUID(), Date.from(Instant.now()).getTime(), commandType.name()));
     }
