@@ -11,6 +11,7 @@ pipeline {
       }
     }
 
+
     stage('Quality Analysis') {
       environment {
         SONAR_URL = 'https://sonarqube.cluster.pw'
