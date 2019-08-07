@@ -22,7 +22,6 @@ pipeline {
       }
     }
 
-
     stage("Quality Gate") {
       steps {
         timeout(time: 30, unit: 'SECONDS') {
@@ -33,4 +32,13 @@ pipeline {
       }
     }
   }
+
+  post {
+      success {
+          setBuildStatus("Build succeeded", "SUCCESS");
+      }
+      failure {
+          setBuildStatus("Build failed", "FAILURE");
+      }
+    }
 }
